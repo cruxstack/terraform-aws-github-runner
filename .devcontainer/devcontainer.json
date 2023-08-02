@@ -41,6 +41,7 @@
         "hashicorp.terraform",
         "ms-azuretools.vscode-docker",
         "ms-python.black-formatter",
+        "timonwong.shellcheck",
         "VisualStudioExptTeam.vscodeintellicode",
       ],
     }

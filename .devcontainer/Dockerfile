@@ -25,7 +25,8 @@ COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/
 # install pip
 RUN apt-get update
 RUN apt-get install -y \
-    python3-pip
+    python3-pip \
+    shellcheck
 
 # install python packages
 RUN python3 -m pip install \
