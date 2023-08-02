@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.13.0"
+  required_version = ">= 1.3.0"
 
   required_providers {
     # v5 blocked until https://github.com/cloudposse/terraform-aws-cloudfront-s3-cdn/pull/280

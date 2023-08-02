@@ -14,11 +14,10 @@ The development container is based on Ubuntu 22.04 (Jammy) and includes the
 following tools:
 
 - AWS CLI
-- Node.js
-- TypeScript
+- Python v3.8
+- Python Packages: `boto3`, `black`
 - Docker CLI
 - Terraform
-- Open Policy Agent
 
 ### Prerequisites
 
