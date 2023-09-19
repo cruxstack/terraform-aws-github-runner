@@ -26,7 +26,7 @@ variable "github_organization_runner_enabled" {
 }
 
 variable "key_pair_name" {
-  description = "Key pair name"
+  description = "Name of the key pair to associate with the runner"
   type        = string
   default     = null
 }
