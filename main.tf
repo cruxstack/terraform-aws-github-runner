@@ -38,7 +38,7 @@ resource "random_string" "github_runner_random_suffix" {
 
 module "github_runner" {
   source  = "philips-labs/github-runner/aws"
-  version = "v3.6.1"
+  version = "v4.2.3"
 
   prefix                                  = module.github_runner_label.id
   enable_ephemeral_runners                = var.runner_ephemeral_mode_enabled
@@ -60,6 +60,7 @@ module "github_runner" {
   instance_target_capacity_type     = lower(var.instance_lifecycle_type)
   instance_types                    = var.instance_types
   instance_allocation_strategy      = "capacity-optimized"
+  key_name                          = var.key_pair_name
   logging_retention_in_days         = var.log_retention
   subnet_ids                        = var.vpc_subnet_ids
   vpc_id                            = var.vpc_id
