@@ -25,6 +25,12 @@ variable "github_organization_runner_enabled" {
   default     = true
 }
 
+variable "key_pair_name" {
+  description = "Name of the key pair to associate with the runner"
+  type        = string
+  default     = null
+}
+
 variable "runner_ephemeral_mode_enabled" {
   type        = bool
   description = "Toggle to activate ephemeral runners."
