@@ -5,7 +5,7 @@ WORKDIR /tmp/runner-binaries
 RUN apk add --no-cache curl
 
 ENV RUNNER_RELEASE_ARTIFACT_BASE_URL=https://github.com/philips-labs/terraform-aws-github-runner/releases/download
-ARG RUNNER_VERSION=3.6.1
+ARG RUNNER_VERSION=4.2.3
 
 RUN curl -L "${RUNNER_RELEASE_ARTIFACT_BASE_URL}/v${RUNNER_VERSION}/runner-binaries-syncer.zip" -o runner-binaries-syncer.zip && \
     curl -L "${RUNNER_RELEASE_ARTIFACT_BASE_URL}/v${RUNNER_VERSION}/runners.zip" -o runners.zip && \
