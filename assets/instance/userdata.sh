@@ -2,6 +2,7 @@
 # shellcheck disable=SC2154,SC2034,SC2128,SC2155,SC2206,SC2207,SC2046,SC2068,SC2125,SC1083
 exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
 
+sleep 5m
 # --- configurations --------------------------
 
 GHR_CORE_CONFIG_RUN_AS=ec2-user
@@ -59,16 +60,13 @@ function provision_instance_stores {
 export -f provision_instance_stores
 
 # --- install: core -----------------------------
-
-
-
 yum upgrade -y
 
-dnf install -y docker
-
-dnf upgrade --refresh rpm glibc
-rm /var/lib/rpm/.rpm.lock
+sudo dnf upgrade --refresh rpm glibc
+sudo rm /var/lib/rpm/.rpm.lock
 dnf -y update
+
+dnf install -y docker
 
 yum install --allowerasing -y \
   amazon-cloudwatch-agent \
