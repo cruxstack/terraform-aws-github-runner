@@ -48,6 +48,11 @@ variable "runner_os" {
   default     = "linux"
 }
 
+variable "runner_iam_role_managed_policy_arns" {
+  type        = list(string)
+  description = "IAM policy arns to attach to the runner"
+}
+
 variable "runner_pool_config" {
   type = list(object({
     cron  = string
