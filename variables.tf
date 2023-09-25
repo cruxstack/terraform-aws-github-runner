@@ -36,6 +36,12 @@ variable "runner_version" {
   description = "Version of the GitHub Action runner."
 }
 
+variable "runner_binaries_path" {
+  type        = string
+  description = "Path to the GitHub Action runner binaries saved locally before pushed to S3."
+  default     = ""
+}
+
 variable "runner_os" {
   type        = string
   description = "Operating system for the GitHub Action runner."

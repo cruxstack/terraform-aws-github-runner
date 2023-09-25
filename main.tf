@@ -130,7 +130,7 @@ module "runner_binaries" {
   version = "1.3.2"
 
   artifact_src_type      = "directory"
-  artifact_dst_directory = "${path.module}/dist"
+  artifact_dst_directory = coalesce(var.runner_binaries_path, "${path.module}/dist")
   artifact_src_path      = "/tmp/runner-binaries"
   docker_build_context   = "${path.module}/assets/runner-binaries"
   docker_build_target    = "package"

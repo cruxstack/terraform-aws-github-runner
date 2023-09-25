@@ -47,6 +47,7 @@ other optional variables (e.g., `name`, `tags`, etc.) provided by the
 | `github_organization`                | Name of the GitHub organization.                                                            | `string`       | n/a                                   |   yes    |
 | `github_app_webhook_password`        | Password for the GitHub app webhook. An empty string implies a randomly generated password. | `string`       | `""`                                  |    no    |
 | `github_organization_runner_enabled` | Toggle to activate runners for all projects in the organization.                            | `bool`         | `true`                                |    no    |
+| `runner_binaries_path`               | Path to the GitHub Action runner binaries saved locally before pushed to S3.                | `string`       | `""`                                  |    no    |
 | `runner_ephemeral_mode_enabled`      | Toggle to activate ephemeral runners.                                                       | `bool`         | `false`                               |    no    |
 | `runner_version`                     | Version of the GitHub Action runner.                                                        | `string`       | n/a                                   |   yes    |
 | `runner_os`                          | Operating system for the GitHub Action runner.                                              | `string`       | `"linux"`                             |    no    |
