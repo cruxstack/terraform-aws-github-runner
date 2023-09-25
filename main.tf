@@ -2,8 +2,8 @@ locals {
   enabled = coalesce(var.enabled, module.this.enabled, true)
   name    = coalesce(var.name, module.this.name, "github-runner-${random_string.github_runner_random_suffix.result}")
 
-  aws_account_id   = try(coalesce(var.aws_account_id, data.aws_caller_identity.current[0].account_id), "")
-  aws_region_name  = try(coalesce(var.aws_region_name, data.aws_region.current[0].name), "")
+  aws_account_id   = module.this.enabled && var.aws_account_id != "" ? var.aws_account_id : try(data.aws_caller_identity.current[0].account_id, "")
+  aws_region_name  = module.this.enabled && var.aws_region_name != "" ? var.aws_region_name : try(data.aws_region.current[0].name), "")
   aws_kv_namespace = trim(coalesce(var.aws_kv_namespace, "github-runner/${module.github_runner_label.id}"), "/")
 
   docker_config_sm_secret_name = "${local.aws_kv_namespace}/config/docker"
@@ -142,17 +142,6 @@ module "runner_binaries" {
 # ---------------------------------------------------------------------- iam ---
 
 data "aws_iam_policy_document" "runner" {
-  statement {
-    sid    = "AllowSsmParameterAccess"
-    effect = "Allow"
-    actions = [
-      "ssm:GetParameter",
-    ]
-    resources = [
-      "arn:aws:ssm:us-east-1::parameter/aws/*",
-    ]
-  }
-
   statement {
     sid    = "AllowAccessToConfigSecret"
     effect = "Allow"
