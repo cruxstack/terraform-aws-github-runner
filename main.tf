@@ -3,7 +3,7 @@ locals {
   name    = coalesce(var.name, module.this.name, "github-runner-${random_string.github_runner_random_suffix.result}")
 
   aws_account_id   = module.this.enabled && var.aws_account_id != "" ? var.aws_account_id : try(data.aws_caller_identity.current[0].account_id, "")
-  aws_region_name  = module.this.enabled && var.aws_region_name != "" ? var.aws_region_name : try(data.aws_region.current[0].name), "")
+  aws_region_name  = module.this.enabled && var.aws_region_name != "" ? var.aws_region_name : try(data.aws_region.current[0].name, "")
   aws_kv_namespace = trim(coalesce(var.aws_kv_namespace, "github-runner/${module.github_runner_label.id}"), "/")
 
   docker_config_sm_secret_name = "${local.aws_kv_namespace}/config/docker"
