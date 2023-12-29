@@ -49,7 +49,6 @@ other optional variables (e.g., `name`, `tags`, etc.) provided by the
 | `github_organization_runner_enabled` | Toggle to activate runners for all projects in the organization.                            | `bool`         | `true`                                |    no    |
 | `runner_binaries_path`               | Path to the GitHub Action runner binaries saved locally before pushed to S3.                | `string`       | `""`                                  |    no    |
 | `runner_ephemeral_mode_enabled`      | Toggle to activate ephemeral runners.                                                       | `bool`         | `false`                               |    no    |
-| `runner_version`                     | Version of the GitHub Action runner.                                                        | `string`       | n/a                                   |   yes    |
 | `runner_os`                          | Operating system for the GitHub Action runner.                                              | `string`       | `"linux"`                             |    no    |
 | `instance_ami_name`                  | Name of the Amazon Machine Image (AMI) for the GitHub Action runner.                        | `string`       | `"al2023-ami-2023.*-kernel-*-x86_64"` |    no    |
 | `instance_types`                     | Set of instance types for the action runner.                                                | `set(string)`  | `["m5ad.large", "m5d.large"]`         |    no    |

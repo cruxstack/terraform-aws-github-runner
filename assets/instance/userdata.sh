@@ -82,7 +82,9 @@ AWS_EC2_METADATA_TOKEN=$(curl -f -X PUT "http://169.254.169.254/latest/api/token
 AWS_REGION=$(curl -f -H "X-aws-ec2-metadata-token: $AWS_EC2_METADATA_TOKEN" -v http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 AWS_INSTANCE_ID=$(curl -f -H "X-aws-ec2-metadata-token: $AWS_EC2_METADATA_TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
 AWS_INSTANCE_AMI_ID=$(curl -f -H "X-aws-ec2-metadata-token: $AWS_EC2_METADATA_TOKEN" -v http://169.254.169.254/latest/meta-data/ami-id)
+AWS_INSTANCE_AZ=$(curl -f -H "X-aws-ec2-metadata-token: $AWS_EC2_METADATA_TOKEN" -v http://169.254.169.254/latest/meta-data/placement/availability-zone)
 AWS_INSTANCE_TAGS=$(aws ec2 describe-tags --region "$AWS_REGION" --filters "Name=resource-id,Values=$AWS_INSTANCE_ID")
+AWS_INSTANCE_TYPE=$(curl -f -H "X-aws-ec2-metadata-token: $AWS_EC2_METADATA_TOKEN" -v http://169.254.169.254/latest/meta-data/instance-type)
 
 # --- configure: docker ---------------------------
 
@@ -159,15 +161,14 @@ while [[ -z "$GHR_CONFIG" ]]; do
 done
 aws ssm delete-parameter --name "$GHR_CORE_CONFIG_TOKEN_PATH/$AWS_INSTANCE_ID" --region "$AWS_REGION"
 
+chown -R "$GHR_CORE_CONFIG_RUN_AS" .
+
 if [ -z "$GHR_CORE_CONFIG_RUN_AS" ]; then
   GHR_CORE_CONFIG_RUN_AS="ec2-user"
 elif [[ "$GHR_CORE_CONFIG_RUN_AS" == "root" ]]; then
   export RUNNER_ALLOW_RUNASROOT=1
 fi
 
-echo "configuring runner..."
-chown -R "$GHR_CORE_CONFIG_RUN_AS" .
-sudo --preserve-env=RUNNER_ALLOW_RUNASROOT -u "$GHR_CORE_CONFIG_RUN_AS" -- ./config.sh --unattended --name "$AWS_INSTANCE_ID" --work "$GHR_CORE_WORK_DIRECTORY" $${GHR_CONFIG}
 
 tee /opt/actions-runner/.setup_info <<EOL
 [{
@@ -175,13 +176,16 @@ tee /opt/actions-runner/.setup_info <<EOL
   "detail": "Distribution: $GHR_SYS_OS\nArchitecture: $GHR_SYS_ARCHITECTURE"
 }, {
   "group": "Runner Image",
-  "detail": "AMI id: $ami_id"
+  "detail": "AMI id: $AWS_INSTANCE_AMI_ID"
+},{
+  "group": "EC2",
+  "detail": "Instance type: $AWS_INSTANCE_TYPE\nAvailability zone: $AWS_INSTANCE_AZ"
 }]
 EOL
 
 echo "creating ephemeral script..."
 cat >/opt/start-runner-service.sh <<-EOF
-  sudo --preserve-env=RUNNER_ALLOW_RUNASROOT -u "$GHR_CORE_CONFIG_RUN_AS" -- ./run.sh
+  sudo --preserve-env=RUNNER_ALLOW_RUNASROOT -u "$GHR_CORE_CONFIG_RUN_AS" -- ./run.sh --jitconfig $${GHR_CONFIG}
   echo "runner is cleaning up..."
   echo "stopping cloudwatch service..."
   systemctl stop amazon-cloudwatch-agent.service
@@ -198,6 +202,7 @@ if [[ $GHR_CORE_CONFIG_AGENT_MODE == "ephemeral" ]]; then
   echo "starting runner as user $GHR_CORE_CONFIG_RUN_AS in ephemeral mode..."
   nohup /opt/start-runner-service.sh &
 else
+  sudo --preserve-env=RUNNER_ALLOW_RUNASROOT -u "$GHR_CORE_CONFIG_RUN_AS" -- ./config.sh --unattended --name "$AWS_INSTANCE_ID" --work "$GHR_CORE_WORK_DIRECTORY" $${GHR_CONFIG}
   echo "starting runner as user $GHR_CORE_CONFIG_RUN_AS..."
   ./svc.sh install "$GHR_CORE_CONFIG_RUN_AS"
   ./svc.sh start
