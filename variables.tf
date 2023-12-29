@@ -31,11 +31,6 @@ variable "runner_ephemeral_mode_enabled" {
   default     = false
 }
 
-variable "runner_version" {
-  type        = string
-  description = "Version of the GitHub Action runner."
-}
-
 variable "runner_binaries_path" {
   type        = string
   description = "Path to the GitHub Action runner binaries saved locally before pushed to S3."

@@ -2,6 +2,8 @@ locals {
   enabled = coalesce(var.enabled, module.this.enabled, true)
   name    = coalesce(var.name, module.this.name, "github-runner-${random_string.github_runner_random_suffix.result}")
 
+  runner_module_version = "v5.6.0"
+
   aws_account_id   = module.this.enabled && var.aws_account_id != "" ? var.aws_account_id : try(data.aws_caller_identity.current[0].account_id, "")
   aws_region_name  = module.this.enabled && var.aws_region_name != "" ? var.aws_region_name : try(data.aws_region.current[0].name, "")
   aws_kv_namespace = trim(coalesce(var.aws_kv_namespace, "github-runner/${module.github_runner_label.id}"), "/")
@@ -38,13 +40,13 @@ resource "random_string" "github_runner_random_suffix" {
 
 module "github_runner" {
   source  = "philips-labs/github-runner/aws"
-  version = "v3.6.1"
+  version = "v5.6.0" # should match local.runner_module_version
 
   prefix                                  = module.github_runner_label.id
   enable_ephemeral_runners                = var.runner_ephemeral_mode_enabled
   enable_organization_runners             = var.github_organization_runner_enabled
   minimum_running_time_in_minutes         = var.runner_min_running_time
-  runner_extra_labels                     = join(",", var.runner_labels)
+  runner_extra_labels                     = var.runner_labels
   runner_as_root                          = true # required for docker
   runner_iam_role_managed_policy_arns     = [aws_iam_policy.runner.arn]
   runner_binaries_s3_sse_configuration    = { rule = { apply_server_side_encryption_by_default = { sse_algorithm = "AES256" } } }
@@ -134,7 +136,7 @@ module "runner_binaries" {
   artifact_src_path      = "/tmp/runner-binaries"
   docker_build_context   = "${path.module}/assets/runner-binaries"
   docker_build_target    = "package"
-  docker_build_args      = { RUNNER_VERSION = trimprefix(var.runner_version, "v") }
+  docker_build_args      = { RUNNER_VERSION = trimprefix(local.runner_module_version, "v") }
 
   context = module.github_runner_label.context
 }
