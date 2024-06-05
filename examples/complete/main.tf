@@ -5,7 +5,6 @@ module "github_runner" {
   github_organization  = var.github_organization
   runner_maximum_count = 10
   runner_labels        = var.runner_labels
-  runner_version       = "3.6.1"
   instance_types       = var.instance_types
   log_retention        = 7
   vpc_id               = var.vpc_id
