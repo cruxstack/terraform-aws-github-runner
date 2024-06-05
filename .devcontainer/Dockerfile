@@ -9,7 +9,7 @@ RUN SYSTEM_ARCH=$(uname -m) \
     && rm -rf aws
 
 # install terraform
-ENV TERRAFORM_VERSION=1.5.1
+ENV TERRAFORM_VERSION=1.8.5
 ENV TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache
 RUN mkdir -p $TF_PLUGIN_CACHE_DIR
 RUN SYSTEM_ARCH=$(dpkg --print-architecture) \

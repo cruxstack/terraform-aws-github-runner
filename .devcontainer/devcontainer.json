@@ -2,7 +2,7 @@
   "name": "Terraform",
   "dockerFile": "Dockerfile",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2.0.1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2.11.0": {}
   },
   "mounts": [
     "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
@@ -14,7 +14,7 @@
     "vscode": {
       "settings": {
         "editor.codeActionsOnSave": {
-          "source.fixAll": true
+          "source.fixAll": "always"
         },
         "editor.formatOnSave": true,
         "editor.formatOnType": false,
@@ -29,7 +29,7 @@
         },
         "[python]": {
           "editor.defaultFormatter": "ms-python.black-formatter"
-        },
+        }
       },
       "extensions": [
         "darkriszty.markdown-table-prettify",
@@ -42,8 +42,8 @@
         "ms-azuretools.vscode-docker",
         "ms-python.black-formatter",
         "timonwong.shellcheck",
-        "VisualStudioExptTeam.vscodeintellicode",
-      ],
+        "VisualStudioExptTeam.vscodeintellicode"
+      ]
     }
-  },
+  }
 }

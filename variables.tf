@@ -100,6 +100,7 @@ variable "instance_types" {
 variable "instance_lifecycle_type" {
   type        = string
   description = "Lifecycle type for action runner instances. Options: `spot` or `on-demand`."
+  default     = "spot"
 
   validation {
     condition     = contains(["spot", "on-demand"], lower(var.instance_lifecycle_type))

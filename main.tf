@@ -2,7 +2,7 @@ locals {
   enabled = coalesce(var.enabled, module.this.enabled, true)
   name    = coalesce(var.name, module.this.name, "github-runner-${random_string.github_runner_random_suffix.result}")
 
-  runner_module_version = "v5.6.0"
+  runner_module_version = "v5.11.0"
 
   aws_account_id   = module.this.enabled && var.aws_account_id != "" ? var.aws_account_id : try(data.aws_caller_identity.current[0].account_id, "")
   aws_region_name  = module.this.enabled && var.aws_region_name != "" ? var.aws_region_name : try(data.aws_region.current[0].name, "")
@@ -40,7 +40,7 @@ resource "random_string" "github_runner_random_suffix" {
 
 module "github_runner" {
   source  = "philips-labs/github-runner/aws"
-  version = "v5.6.0" # should match local.runner_module_version
+  version = "v5.11.0" # should match local.runner_module_version
 
   prefix                                  = module.github_runner_label.id
   enable_ephemeral_runners                = var.runner_ephemeral_mode_enabled
@@ -129,7 +129,7 @@ resource "random_password" "webhook" {
 
 module "runner_binaries" {
   source  = "cruxstack/artifact-packager/docker"
-  version = "1.3.2"
+  version = "1.3.6"
 
   artifact_src_type      = "directory"
   artifact_dst_directory = coalesce(var.runner_binaries_path, "${path.module}/dist")
