@@ -26,9 +26,10 @@ module "github_runner_label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
 
-  enabled = local.enabled
-  name    = local.name
-  context = module.this.context
+  enabled         = local.enabled
+  name            = local.name
+  context         = module.this.context
+  id_length_limit = 24
 }
 
 # only appliable if name variable was not set
